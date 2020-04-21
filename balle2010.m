@@ -1,24 +1,31 @@
-function balle2010(y1,speed,airFlag,tau)
-%% balle2010 - Program to compute the trajectory of a package  
-%         using the midpoint method.                              
-% invoke as: balle2010(500,90,1,0.5)                          
-% y1 = intial height of package(meters)                                  
+function balle2010(y1,speed,airFlag,tau,shape)                          
+%% balle2010 - Program to compute the trajectory of a package            
+%         using the midpoint method.                                    
+% invoke as: balle2010(500,90,1,0.5,0)                                                     
+% y1 = intial height of package(meters)                                                        
 % speed = intial speed of aircraft (m/s)                                                             
-% airFlag specifies whether there is air resistance: enter 1   
-% for yes, 0 for no                                            
-% tau = timestep, tau(seconds)                                 
+% airFlag specifies whether there is air resistance: enter 1            
+% for yes, 0 for no                                                     
+% tau = timestep, tau(seconds)
+% shape specifies the shape of the package: enter 0 for sphere, 1 for cube %SP 
 % Original by AJG; modified by Katrina Carver and Sarah Powell 20200404           
 help balle2010; % print header                                 
 
 
-%% * Set initial position and velocity of the baseball
+%% * Set initial position and velocity of the package
 r1 = [0, y1];     % Initial vector position
 v1 = [speed, 0];     % Initial velocity
 r = r1;  v = v1;  % Set initial position and velocity
 
 %% * Set physical parameters (mass, Cd, etc.)
-Cd = 0.47;      % Drag coefficient (dimensionless) %Cd=12v/Rv=24/Re Cd~0.47 for sphere
-area = 7.1e-2;  % Cross-sectional area of projectile (m^2) %rad=15cm
+if shape == 0 %SP
+    Cd = 0.47;      % Drag coefficient (dimensionless) %Cd=12v/Rv=24/Re Cd~0.47 for sphere %SP
+    area = 7.1e-2;  % Cross-sectional area of projectile (m^2) %rad=15cm %SP
+else 
+    Cd = 1.05;      % Drag coefficient (dimensionless) %Cd=12v/Rv=24/Re Cd~1.05 for cube %SP
+    area = 5.85e-2;  % Cross-sectional area of projectile (m^2) %Gives same volume as sphere with r=15cm %SP
+end
+
 grav = 9.81;    % Gravitational acceleration (m/s^2)
 mass = 4;   % Mass of projectile (kg) 
 if( airFlag == 0 )
@@ -28,7 +35,7 @@ else
 end
 air_const = -0.5*Cd*rho*area/mass;  % Air resistance constant
 
-%% * Loop until ball hits ground or max steps completed
+%% * Loop until package hits ground or max steps completed
 maxstep = 1500;   % Maximum number of steps
 
 for istep=1:maxstep
@@ -45,20 +52,20 @@ for istep=1:maxstep
   accel(2) = accel(2)-grav;      % Gravity
   
  
-  %* Calculate the new position and velocity using midpoint method
-  r = r + tau*((v + tau*accel)+v)/2; %uses average of previous and new velocity to calculate position
+  %* Calculate the new position and velocity using midpoint method %SP
+  r = r + tau*((v + tau*accel)+v)/2; %uses average of previous and new velocity to calculate position %SP
   v = v + tau*accel;
 
   rx(istep)=r(1); ry(istep)=r(2); %recording the components of r for each iteration
   
-  %* If ball reaches ground (y<0), break out of the loop
+  %* If package reaches ground (y<0), break out of the loop
   if( r(2) < 0 )  
     xplot(istep+1) = r(1);  % Record last values computed
 	yplot(istep+1) = r(2);
     break;                  % Break out of the for loop
   end 
 end
-%% * Correcting maximum range and time
+%% * Correcting maximum range and time %SP
 last3_x=[rx(end-2), rx(end-1), rx(end)]; % creating a vector of the last 3 x-components of r
 last3_y=[ry(end-2), ry(end-1), ry(end)]; % creating a vector of the last 3 y-components of r
 
@@ -74,16 +81,15 @@ corrected_time=(istep*tau)-((rx(end)-corrected_range)/v(1));
 fprintf('Maximum range is %g meters\n',corrected_range); %prints max range
 fprintf('Time of flight is %g seconds\n',corrected_time); %prints time of flight
 
-%% * Graph the trajectory of the baseball
+%% * Graph the trajectory of the package
 figure(1); clf;    % Clear figure window #1 and bring it forward
 % Mark the location of the ground by a straight line
 xground = [0 max(xNoAir)];  yground = [0 0];
 % Plot the computed trajectory and parabolic, no-air curve
 plot(xplot,yplot,'+',xNoAir,yNoAir,'-',xground,yground,'-');
 ylim([-10 550]);
-%The following prints the corect label on the legend for which method was
-%used for the calculation.
-legend('Quadratic drag','Theory (No air)  ');
+
+legend('Quadratic drag','Theory (No air)  '); %SP
 xlabel('Range (m)');  ylabel('Height (m)');
 title('Projectile motion');
 
