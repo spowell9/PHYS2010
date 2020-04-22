@@ -14,7 +14,7 @@ help balle2010MOD; % print header
 % for yes, 0 for no                                            
 % tau = timestep, tau(seconds) 
 % shape specifies the shape of the package: enter 0 for sphere, 1 for cube %SP
-% m1, m2, m3, m4 = mass of each projectile (kg), should not be less than 4kg    %KC
+% m1, m2, m3, m4 = mass of each projectile (kg)    %KC
 % wind = wind in horizontal direction (m/s) %SP
 
 % KC change log 04212020: edited program to include 4 masses instead of 1
@@ -40,10 +40,10 @@ state4 = [r(1) r(2) v(1) v(2)];         %add KC
 %% * Set physical parameters (mass, Cd, etc.)
 if shape == 0 %SP
     Cd = 0.47;      % Drag coefficient (dimensionless) %Cd=12v/Rv=24/Re Cd~0.47 for sphere %SP
-    area = 7.1e-2;  % Cross-sectional area of projectile (m^2) %rad=15cm %SP
+    area = 0.109;  % Cross-sectional area of projectile (m^2) %Gives same volume as a cube with l=30cm %SP
 else 
     Cd = 1.05;      % Drag coefficient (dimensionless) %Cd=12v/Rv=24/Re Cd~1.05 for cube %SP
-    area = 5.85e-2;  % Cross-sectional area of projectile (m^2) %Gives same volume as sphere with r=15cm %SP
+    area = 0.09;  % Cross-sectional area of projectile (m^2) % cube with l=30cm %SP
 end
 
 grav = 9.81;    % Gravitational acceleration (m/s^2)
