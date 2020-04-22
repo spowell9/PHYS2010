@@ -1,7 +1,7 @@
-function balle2010Mod(y1,speed,airFlag,tau,shape,m1,m2,m3,m4)      %add KC/SP
+function balle2010Mod(y1,speed,airFlag,tau,shape,m1,m2,m3,m4,wind)      %add KC/SP
 %% balle2010MOD - Program to compute the trajectory of a package  
 %         using the midpoint method.                              
-% invoke as: balle2010Mod(500,90,1,0.0001,1,4,8,12,16)
+% invoke as: balle2010Mod(500,90,1,0.0001,1,4,8,12,16,0)
 
 % Original by AJG; modified by Katrina Carver and Sarah Powell 20200404           
 help balle2010MOD; % print header 
@@ -15,6 +15,7 @@ help balle2010MOD; % print header
 % tau = timestep, tau(seconds) 
 % shape specifies the shape of the package: enter 0 for sphere, 1 for cube %SP
 % m1, m2, m3, m4 = mass of each projectile (kg), should not be less than 4kg    %KC
+% wind = wind in horizontal direction (m/s) %SP
 
 % KC change log 04212020: edited program to include 4 masses instead of 1
 %                  in main loop, and in calculation of range and time of
@@ -28,7 +29,7 @@ help balle2010MOD; % print header
 
 %% * Set initial position and velocity of the package
 r = [0, y1];     % Initial vector position
-v = [speed, 0];     % Initial velocity
+v = [speed+wind, 0];     % Initial velocity %mod SP
 % Set initial position and velocity
 state1 = [r(1) r(2) v(1) v(2)];         %add KC
 state2 = [r(1) r(2) v(1) v(2)];         %add KC
